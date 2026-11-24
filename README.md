@@ -22,7 +22,10 @@ python3 -m http.server 8000
 | `assets/fonts/` | Anton and JetBrains Mono, self-hosted (SIL OFL), so no Google Fonts calls. |
 | `favicon.ico`, `favicon.svg`, `site.webmanifest` | Browser and home-screen icons. |
 | `robots.txt`, `sitemap.xml` | For search engines. |
-| `_headers` | Security and cache headers for Netlify or Cloudflare Pages. |
+| `_headers`, `_redirects` | Headers and 404 rule for Netlify / Cloudflare Pages style hosts. |
+| `.htaccess` | Headers, 404, HTTPS and www redirects for Apache / LiteSpeed hosts. |
+| `vercel.json` | Headers for Vercel style hosts. |
+| `deploy/nginx.conf` | Ready server block if the host runs nginx. |
 
 ## Swapping the logo (SVG or Lottie)
 
@@ -35,17 +38,30 @@ Remember to also refresh the preload line for the logo in `<head>`.
 
 ## Changing the domain
 
-All absolute URLs (canonical, share cards, structured data, sitemap, robots, 404 base) point to `https://oslolights.com/`. `CNAME` tells GitHub Pages to serve that domain. To move to another address:
+All absolute URLs (canonical, share cards, structured data, sitemap, robots, 404 base) point to `https://oslolights.com/`. To move to another address:
 
 ```sh
 scripts/set-domain.sh https://new-domain.example/
 ```
-and update `CNAME`.
 
 ## Hosting
 
-- **GitHub Pages:** Settings > Pages > Deploy from branch `main`, folder `/`, then add oslolights.com as the custom domain and tick Enforce HTTPS. DNS: apex `A` records to 185.199.108.153, .109.153, .110.153, .111.153 and `www` CNAME to `miuglitch.github.io`. GitHub Pages can't send custom headers, so the page carries its CSP and referrer policy as `<meta>` tags; HSTS and frame protection need a host that supports headers (or Cloudflare in front).
-- **Netlify / Cloudflare Pages:** point at the repo with no build command and output folder `/`. `_headers` is picked up automatically and adds CSP, HSTS, nosniff, frame and referrer policies and long caching for images and fonts.
+The site is deployed by **ardacloud**, which reads this repo directly (the repo stays private). It's plain static files with no build step. In Arda pick the **Static HTML** preset (not Docker; there is no Dockerfile), leave the build command empty, publish directory = repo root.
+
+The repo carries header and 404 config in every common format, so whichever one the host reads, it gets the same rules:
+
+| Host reads | File | Gives |
+| --- | --- | --- |
+| `_headers` / `_redirects` (Netlify, Cloudflare Pages and similar) | `_headers`, `_redirects` | Security headers, caching, 404 |
+| Apache or LiteSpeed | `.htaccess` | Security headers, caching, 404, HTTPS and www redirects, hides repo files |
+| `vercel.json` (Vercel and similar) | `vercel.json` | Security headers, caching (404.html is picked up automatically) |
+| nginx | `deploy/nginx.conf` | Paste into the server config |
+
+Whatever the host, `index.html` and `404.html` also carry the CSP and referrer policy as `<meta>` tags, so the core protection is there even if none of the files above is read. HSTS and frame blocking need real headers.
+
+The 404 page uses `<base href="https://oslolights.com/">`, so its styles load from any depth. Most hosts serve `404.html` for missing pages automatically; if ardacloud asks for an error page setting, point it at `/404.html`.
+
+After the first deploy, check headers at https://securityheaders.com and the share card at https://www.opengraph.xyz.
 
 ## Motion
 
@@ -74,8 +90,9 @@ Based on the [Front-End Checklist](https://github.com/thedaviddias/Front-End-Che
 - [x] `prefers-reduced-motion` respected
 - [x] No horizontal scroll at 320px and up
 - [x] Content-Security-Policy (meta + header), HSTS, nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy
-- [x] Domain set to oslolights.com (`CNAME` + all absolute URLs)
-- [ ] DNS for oslolights.com pointed at the host
+- [x] Domain set to oslolights.com in all absolute URLs
+- [ ] DNS for oslolights.com pointed at ardacloud
+- [ ] Confirm headers arrived (securityheaders.com)
 - [ ] HTTPS enforced on the host
 - [ ] Submit sitemap in Google Search Console after launch
 - [ ] Check share preview (e.g. opengraph.xyz) once live

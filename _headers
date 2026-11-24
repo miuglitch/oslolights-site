@@ -1,12 +1,12 @@
 # Security headers for Netlify and Cloudflare Pages (both read this file).
-# GitHub Pages ignores it; index.html carries a meta CSP and referrer policy as a fallback.
+# Hosts that ignore this file still get the meta CSP and referrer policy in the HTML.
 /*
   Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
 
 # Fonts and photos never change in place (new file name = new version)
