@@ -214,7 +214,7 @@ body::after {
   box-shadow: 0 0 6px 1px var(--laser-glow), 0 0 28px 4px var(--laser-glow);
   pointer-events: none;
 }
-.laser--1 { left: 0; width: 38%; top: 18%; animation: flicker 5.3s infinite; }
+.laser--1 { left: 0; width: 22%; top: 18%; animation: flicker 5.3s infinite; } /* stays clear of the faces at every width */
 .laser--2 { right: 0; width: 26%; top: 31%; animation: flicker 7.1s 1.2s infinite; }
 .laser--3 {
   left: -10%; width: 120%; top: 0;
@@ -320,6 +320,7 @@ body::after {
   text-shadow: 0 0 18px rgba(0,0,0,0.9);
 }
 .hero__tag span { color: var(--laser); letter-spacing: 0; padding: 0 0.3em; }
+@media (max-width: 400px) { .hero__tag { letter-spacing: 0.24em; } }
 
 /* ==========================================================================
    LINKS: raw concrete slabs
