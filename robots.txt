@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://miuglitch.github.io/oslolights-site/sitemap.xml
+Sitemap: https://oslolights.com/sitemap.xml

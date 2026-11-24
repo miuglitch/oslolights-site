@@ -35,15 +35,16 @@ Remember to also refresh the preload line for the logo in `<head>`.
 
 ## Changing the domain
 
-All absolute URLs (canonical, share cards, structured data, sitemap, robots, 404 base) point to `https://miuglitch.github.io/oslolights-site/` for now. When a domain is ready:
+All absolute URLs (canonical, share cards, structured data, sitemap, robots, 404 base) point to `https://oslolights.com/`. `CNAME` tells GitHub Pages to serve that domain. To move to another address:
 
 ```sh
-scripts/set-domain.sh https://oslolights.com/
+scripts/set-domain.sh https://new-domain.example/
 ```
+and update `CNAME`.
 
 ## Hosting
 
-- **GitHub Pages:** Settings > Pages > Deploy from branch `main`, folder `/`. Works as is. GitHub Pages can't send custom headers, so the page carries its CSP and referrer policy as `<meta>` tags; HSTS and frame protection need a host that supports headers (or Cloudflare in front).
+- **GitHub Pages:** Settings > Pages > Deploy from branch `main`, folder `/`, then add oslolights.com as the custom domain and tick Enforce HTTPS. DNS: apex `A` records to 185.199.108.153, .109.153, .110.153, .111.153 and `www` CNAME to `miuglitch.github.io`. GitHub Pages can't send custom headers, so the page carries its CSP and referrer policy as `<meta>` tags; HSTS and frame protection need a host that supports headers (or Cloudflare in front).
 - **Netlify / Cloudflare Pages:** point at the repo with no build command and output folder `/`. `_headers` is picked up automatically and adds CSP, HSTS, nosniff, frame and referrer policies and long caching for images and fonts.
 
 ## Motion
@@ -73,7 +74,8 @@ Based on the [Front-End Checklist](https://github.com/thedaviddias/Front-End-Che
 - [x] `prefers-reduced-motion` respected
 - [x] No horizontal scroll at 320px and up
 - [x] Content-Security-Policy (meta + header), HSTS, nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy
-- [ ] Domain bought and `scripts/set-domain.sh` run
+- [x] Domain set to oslolights.com (`CNAME` + all absolute URLs)
+- [ ] DNS for oslolights.com pointed at the host
 - [ ] HTTPS enforced on the host
 - [ ] Submit sitemap in Google Search Console after launch
 - [ ] Check share preview (e.g. opengraph.xyz) once live
